@@ -36,14 +36,16 @@ class InstalllName:
         self.args = self.parseArgs()
         self.libdir_pattern = re.compile(r'^\s+' + self.args.libdir)
         self.dylib_pattern = re.compile(r'^\s+(%s.+?) .+' % self.args.libdir)
+        shutil.rmtree(self.args.install_libdir)
         make_sure_path_exists(self.args.install_libdir)
         self.dylibs_copied = set()
+        self.dylibs_recursed = set()
         self.install_name_tool(self.args.object)
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
-        parser.add_argument('-d', '--install-libdir', help="Shared library directory", type=str, default='../lib/')
-        parser.add_argument('-L', '--libdir', help="Shared library directory", type=str, default='/opt/local/lib/')
+        parser.add_argument('-d', '--install-libdir', help="Shared library install directory", type=str, default='../lib/')
+        parser.add_argument('-L', '--libdir', help="Shared library source directory", type=str, default='/opt/local/lib/')
         parser.add_argument('-o', '--object', help="Object file", required=True)
         return parser.parse_args()
 
@@ -65,8 +67,9 @@ class InstalllName:
                          target ]
                 sp.call(cmd)
                 print "\t" + ' '.join(cmd)
-                if dylib != object: # recurse
+                if dylib not in self.dylibs_recursed and dylib != object: # recurse
                     self.install_name_tool(dylib)
+                    self.dylibs_recursed.add(dylib)
 
 if __name__ == "__main__":
     install_name = InstalllName()
