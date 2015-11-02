@@ -36,17 +36,20 @@ class InstalllName:
         self.args = self.parseArgs()
         self.libdir_pattern = re.compile(r'^\s+' + self.args.libdir)
         self.dylib_pattern = re.compile(r'^\s+(%s.+?) .+' % self.args.libdir)
-        shutil.rmtree(self.args.install_libdir)
-        make_sure_path_exists(self.args.install_libdir)
+        if not self.args.update:
+            shutil.rmtree(self.args.install_libdir)
+            make_sure_path_exists(self.args.install_libdir)
         self.dylibs_copied = set()
         self.dylibs_recursed = set()
-        self.install_name_tool(self.args.object)
+        for object in self.args.objects: self.install_name_tool(object)
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
+        parser.add_argument('objects', metavar='OBJS', type=str, nargs='+',
+                            help='Object file[s]')
         parser.add_argument('-d', '--install-libdir', help="Shared library install directory", type=str, default='../lib/')
         parser.add_argument('-L', '--libdir', help="Shared library source directory", type=str, default='/opt/local/lib/')
-        parser.add_argument('-o', '--object', help="Object file", required=True)
+        parser.add_argument('-u', '--update', help="Update the install directory", action='store_false')
         return parser.parse_args()
 
     def install_name_tool(self,object):
@@ -57,7 +60,8 @@ class InstalllName:
             if self.libdir_pattern.match(line):
                 dylib = self.dylib_pattern.sub(r'\1',line)
                 if dylib not in self.dylibs_copied:
-                    shutil.copy(dylib, self.args.install_libdir)
+                    if not self.args.update and not os.path.isfile(self.args.install_libdir + os.path.basename(dylib)):
+                        shutil.copy(dylib, self.args.install_libdir)
                     self.dylibs_copied.add(dylib)
                 target = self.args.install_libdir + os.path.basename(object) \
                     if (os.path.splitext(os.path.basename(object))[1] == '.dylib') \
