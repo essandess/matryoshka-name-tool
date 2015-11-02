@@ -22,7 +22,9 @@ __author__ = 'stsmith'
 
 import argparse as ap, errno, os, re, shutil, subprocess as sp
 
-def make_sure_path_exists(path):
+def make_sure_empty_path_exists(path):
+    try:
+        shutil.rmtree(path)
     try:
         os.makedirs(path)
     except OSError as exception:
@@ -37,8 +39,7 @@ class MatryoshkaName:
         self.libdir_pattern = re.compile(r'^\s+' + self.args.libdir)
         self.dylib_pattern = re.compile(r'^\s+(%s.+?) .+' % self.args.libdir)
         if not self.args.update:
-            shutil.rmtree(self.args.install_libdir)
-            make_sure_path_exists(self.args.install_libdir)
+            make_sure_empty_path_exists(self.args.install_libdir)
         self.dylibs_copied = set()
         self.dylibs_recursed = set()
         for object in self.args.objects: self.install_name_tool(object)
