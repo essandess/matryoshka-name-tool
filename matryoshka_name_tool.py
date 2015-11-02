@@ -20,7 +20,7 @@ __author__ = 'stsmith'
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import argparse, errno, os, re, shutil, subprocess as sp
+import argparse as ap, errno, os, re, shutil, subprocess as sp
 
 def make_sure_path_exists(path):
     try:
@@ -29,7 +29,7 @@ def make_sure_path_exists(path):
         if exception.errno != errno.EEXIST:
             raise
 
-class InstalllName:
+class MatryoshkaName:
     args = None
 
     def run(self):
@@ -44,7 +44,7 @@ class InstalllName:
         for object in self.args.objects: self.install_name_tool(object)
 
     def parseArgs(self):
-        parser = argparse.ArgumentParser()
+        parser = ap.ArgumentParser()
         parser.add_argument('objects', metavar='OBJS', type=str, nargs='+',
                             help='Object file[s]')
         parser.add_argument('-d', '--install-libdir', help="Shared library install directory", type=str, default='../lib/')
@@ -76,5 +76,5 @@ class InstalllName:
                     self.dylibs_recursed.add(dylib)
 
 if __name__ == "__main__":
-    install_name = InstalllName()
+    install_name = MatryoshkaName()
     install_name.run()
