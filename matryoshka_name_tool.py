@@ -21,10 +21,14 @@ __author__ = 'stsmith'
 
 
 import argparse as ap, errno, os, re, shutil, subprocess as sp
+import traceback
 
 def make_sure_empty_path_exists(path):
     try:
         shutil.rmtree(path)
+    except OSError as exception:
+        if exception.errno != errno.ENOENT:
+            raise
     try:
         os.makedirs(path)
     except OSError as exception:
