@@ -1,5 +1,5 @@
 # matryoshka-name-tool
-A recursive call of OS X's install_name_tool for shared library distributions
+A recursive call of OS X's `install_name_tool` for shared library distributions.
 
 ## Synopsis
 
