@@ -12,19 +12,21 @@ Apple [does not support](https://developer.apple.com/library/mac/qa/qa1118/_inde
 `python matryoshka_name_tool.py ./comskip ./comskip-gui`
 
 `python matryoshka_name_tool.py -h`
-> usage: matryoshka_name_tool.py [-h] [-d INSTALL_LIBDIR] [-L LIBDIR] [-u]
->                                OBJS [OBJS ...]
-> 
-> positional arguments:
->   OBJS                  Object file[s]
-> 
-> optional arguments:
->   -h, --help            show this help message and exit
->   -d INSTALL_LIBDIR, --install-libdir INSTALL_LIBDIR
->                         Shared library install directory
->   -L LIBDIR, --libdir LIBDIR
->                         Shared library source directory
->   -u, --update          Update the install directory
+```
+usage: matryoshka_name_tool.py [-h] [-d INSTALL_LIBDIR] [-L LIBDIR] [-u]
+                               OBJS [OBJS ...]
+
+positional arguments:
+  OBJS                  Object file[s]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d INSTALL_LIBDIR, --install-libdir INSTALL_LIBDIR
+                        Shared library install directory
+  -L LIBDIR, --libdir LIBDIR
+                        Shared library source directory
+  -u, --update          Update the install directory
+```
 
 ## License
 
